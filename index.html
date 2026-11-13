@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F4EE">
+<title>The PURE Project - Conversation Series Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F4EE;
+    --card: #FCFAF6;
+    --card-alt: #F2EDE3;
+    --text: #211F1C;
+    --text-muted: #726E67;
+    --accent: #B87644;
+    --accent-dark: #965C30;
+    --sage: #5C7462;
+    --sage-bg: rgba(92, 116, 98, 0.14);
+    --amber-bg: rgba(184, 118, 68, 0.14);
+    --blue: #4A6FA5;
+    --blue-bg: rgba(74, 111, 165, 0.14);
+    --purple: #7B5EA7;
+    --purple-bg: rgba(123, 94, 167, 0.14);
+    --border: #E8E2D5;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0 0 110px 0;
+    line-height: 1.5;
+  }
+
+  .app-shell {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+  }
+
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 30px;
+    font-weight: 300;
+    margin: 0 0 6px 0;
+    line-height: 1.15;
+  }
+
+  h1 em { font-style: italic; }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 9px 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 560px) {
+    .metrics { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .metric-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .metric-card.active {
+    border-color: var(--accent);
+    background: #FBF7F0;
+  }
+
+  .metric-val {
+    font-family: 'Newsreader', serif;
+    font-size: 24px;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .metric-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+  }
+
+  .pill-row {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .pill-row::-webkit-scrollbar { display: none; }
+
+  .pill {
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .pill.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px 16px;
+  }
+
+  .contact-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .contact-name {
+    font-weight: 700;
+    font-size: 15.5px;
+    margin: 0;
+  }
+
+  .contact-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .contact-note {
+    font-size: 13px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    gap: 8px;
+  }
+
+  .stage-select {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .stage-Queued { background: var(--card-alt); color: var(--text-muted); }
+  .stage-Invited { background: var(--amber-bg); color: var(--accent-dark); }
+  .stage-Agreed { background: var(--sage-bg); color: #3A5240; }
+  .stage-Recorded { background: var(--blue-bg); color: #2E4D7B; }
+  .stage-Published { background: var(--purple-bg); color: #543B7A; }
+
+  .action-link {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 11px;
+  }
+
+  .action-link.prompt-btn {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+    background: #FBF7F0;
+  }
+
+  .fab-voice {
+    position: fixed;
+    bottom: 24px;
+    right: 22px;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C6834E, #9E5E2E);
+    color: #fff;
+    border: none;
+    box-shadow: 0 8px 24px rgba(158, 94, 46, 0.38);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 900;
+  }
+
+  .fab-voice.listening {
+    animation: pulse 1.4s infinite;
+    background: #C93B3B;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(201, 59, 59, 0.55); }
+    70% { box-shadow: 0 0 0 18px rgba(201, 59, 59, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(201, 59, 59, 0); }
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(33, 31, 28, 0.5);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal-backdrop.open { display: flex; }
+
+  .modal-sheet {
+    background: var(--card);
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 34px 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-title {
+    font-family: 'Newsreader', serif;
+    font-size: 22px;
+    margin: 0 0 6px 0;
+  }
+
+  .voice-transcript {
+    width: 100%;
+    min-height: 110px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    margin: 12px 0;
+    resize: vertical;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .toast {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 1200;
+    display: none;
+    max-width: 90%;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="app-shell">
+  <header>
+    <span class="eyebrow">The PURE Project &middot; Moving at the Pace of Trust</span>
+    <h1>Conversation Series <em>Tracker</em></h1>
+    <p class="subtitle">Recorded dialogues with trusted friends &amp; pioneers &mdash; illuminating Born to Connect, Divergent Guides &amp; Mr. Fix Agency</p>
+    <div class="header-actions">
+      <button class="btn btn-primary" type="button" onclick="openAddModal()">+ Add Person</button>
+      <button class="btn btn-accent" type="button" onclick="openPromptModal()">Create Outreach Prompt</button>
+      <button class="btn" type="button" onclick="shareTeamUpdate()">Copy Team Update</button>
+    </div>
+  </header>
+
+  <div class="metrics" id="metricsBar"></div>
+
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search friends, locations, projects, or notes..." oninput="render()">
+    <div class="pill-row" id="tierPills">
+      <button class="pill active" type="button" data-tier="ALL" onclick="setTier('ALL', this)">All Circles</button>
+      <button class="pill" type="button" data-tier="Tier 1" onclick="setTier('Tier 1', this)">Tier 1 &middot; Trusted Friends</button>
+      <button class="pill" type="button" data-tier="Tier 2" onclick="setTier('Tier 2', this)">Tier 2 &middot; Peer Builders</button>
+      <button class="pill" type="button" data-tier="Tier 3" onclick="setTier('Tier 3', this)">Tier 3 &middot; Luminaries</button>
+    </div>
+  </div>
+
+  <div class="contact-list" id="contactList"></div>
+</div>
+
+<button class="fab-voice" id="fabVoice" type="button" onclick="openVoiceModal()" title="Voice Update">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+    <line x1="12" y1="19" x2="12" y2="22"/>
+  </svg>
+</button>
+
+<div class="modal-backdrop" id="promptModal">
+  <div class="modal-sheet">
+    <h3 class="modal-title">Create Outreach Prompt</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin:0 0 12px 0;">
+      Generate a warm, trust-paced invitation note or voice-note script tailored to a specific contact.
+    </p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <select id="promptContactSelect" class="search-input" onchange="generatePromptText()"></select>
+      <select id="promptStyleSelect" class="search-input" onchange="generatePromptText()">
+        <option value="voicenote">Voice Note Script (Warm &amp; Conversational)</option>
+        <option value="whatsapp">WhatsApp / Text Message (Short &amp; Personal)</option>
+        <option value="catalyst">Born to Connect: First Six Invitation</option>
+        <option value="gemini">Gemini AI Prompt (Deep Custom Draft)</option>
+      </select>
+    </div>
+    <textarea class="voice-transcript" id="promptOutput" style="min-height:170px;" readonly></textarea>
+    <div class="modal-footer">
+      <button class="btn" type="button" onclick="closePromptModal()">Close</button>
+      <button class="btn btn-primary" type="button" onclick="copyPromptOutput()">Copy Prompt / Script</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="voiceModal">
+  <div class="modal-sheet">
+    <h3 class="modal-title">Voice Pipeline Update</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin:0;" id="voiceStatus">
+      Tap the mic or type naturally: <em>"Invited Trevor Kamplin and Liat Cohen"</em> or <em>"Mark Carlos Schutz as recorded"</em>
+    </p>
+    <textarea class="voice-transcript" id="voiceText" placeholder="Speak or type your update here..."></textarea>
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+      <button class="btn" type="button" id="micToggleBtn" onclick="toggleSpeech()">Start Listening</button>
+      <div style="display:flex; gap:8px;">
+        <button class="btn" type="button" onclick="closeVoiceModal()">Cancel</button>
+        <button class="btn btn-primary" type="button" onclick="processVoiceCommand()">Apply Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="editModal">
+  <div class="modal-sheet">
+    <h3 class="modal-title" id="editModalTitle">Edit Contact</h3>
+    <input type="hidden" id="editId">
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+      <input type="text" id="editName" class="search-input" placeholder="Full Name">
+      <div style="display:flex; gap:8px;">
+        <select id="editTier" class="search-input" style="flex:1;">
+          <option value="Tier 1">Tier 1 - Trusted Friends</option>
+          <option value="Tier 2">Tier 2 - Peer Builders</option>
+          <option value="Tier 3">Tier 3 - Luminaries</option>
+        </select>
+        <select id="editStage" class="search-input" style="flex:1;">
+          <option value="Queued">1. Queued</option>
+          <option value="Invited">2. Invited</option>
+          <option value="Agreed">3. Agreed / Scheduling</option>
+          <option value="Recorded">4. Recorded</option>
+          <option value="Published">5. Published</option>
+        </select
