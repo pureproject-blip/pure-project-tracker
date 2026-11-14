@@ -93,3 +93,45 @@
   </div>
   <div class="contact-list" id="contactList"></div>
 </div>
+<script>
+const STAGES = ['Queued', 'Invited', 'Agreed', 'Recorded', 'Published'];
+const INITIAL_CONTACTS = [
+  { id: 1, name: "Carlos Schutz", tier: "Tier 1", stage: "Agreed", role: "Florianopolis, Brazil - Advisor to Philanthropists & UHNWIs", note: "Agreed to record inaugural conversation. Follow up to lock recording date + explore co-advisory client opportunities for The PURE Project & Mr. Fix Agency." },
+  { id: 2, name: "Trevor Kamplin", tier: "Tier 1", stage: "Queued", role: "Dear friend - Grounded lived wisdom", note: "Personal presence, life transitions, and human accompaniment." },
+  { id: 3, name: "Lucian Tarnowski", tier: "Tier 1", stage: "Queued", role: "Dear friend - United Planet / UP.GAME", note: "Planetary simulation, conscious leadership, and collective flourishing." },
+  { id: 4, name: "Liat Cohen", tier: "Tier 1", stage: "Queued", role: "Dear friend & mother", note: "Intuitive presence and reflections on conscious parenting and belonging." },
+  { id: 5, name: "Katia Segovia", tier: "Tier 1", stage: "Queued", role: "Dear friend - Relational depth", note: "Warm, authentic personal dialogue." },
+  { id: 6, name: "Mel Rubin", tier: "Tier 1", stage: "Queued", role: "Personal coach & close connection", note: "Inner alignment and personal transformation." },
+  { id: 7, name: "Cezary Mielczarek", tier: "Tier 1", stage: "Queued", role: "Co-founder - Intaaya", note: "Sanctuary building, spirituality, and regenerative leadership." },
+  { id: 8, name: "Lourenco Bustani", tier: "Tier 1", stage: "Queued", role: "Co-founder - Mandalah", note: "Conscious business, cultural wisdom, and human-centered systems." },
+  { id: 9, name: "Michel Bachmann", tier: "Tier 1", stage: "Queued", role: "Co-founder - Impact Hub Zurich / deceler8", note: "Slowing down, Theory U, and deep relational listening." },
+  { id: 10, name: "Gui Perdrix", tier: "Tier 1", stage: "Queued", role: "Author - The Art of Coliving / Artof.Co", note: "Shared living spaces, belonging, and community architecture." },
+  { id: 11, name: "Fabian Pfortmuller", tier: "Tier 1", stage: "Queued", role: "Co-founder - Together Institute / Community Canvas", note: "The craft of gathering people and building spaces without strangers." },
+  { id: 12, name: "David Radparvar", tier: "Tier 1", stage: "Queued", role: "Co-founder - Holstee / Reflection.app", note: "Mindful self-inquiry, gratitude, and intentional living." },
+  { id: 13, name: "Amisha Ghadiali", tier: "Tier 1", stage: "Queued", role: "Author - Intuition / The Future is Beautiful", note: "Intuitive leadership, wholeness, and conscious community." },
+  { id: 14, name: "Carolina Fleissner", tier: "Tier 1", stage: "Queued", role: "Close super-connector", note: "Somatic awareness, conscious communities, and human connection." },
+  { id: 15, name: "Burkhard", tier: "Tier 1", stage: "Queued", role: "Close friend & mentor-network anchor", note: "Unique minds and non-traditional human potential." },
+  { id: 16, name: "Jeremy & Melanie Roske", tier: "Tier 1", stage: "Queued", role: "Transformational musicians & holistic guides", note: "Authentic expression, voice, and community song." },
+  { id: 17, name: "Isaac Koren", tier: "Tier 1", stage: "Queued", role: "Musician - Brothers Koren / Voice Mentor", note: "Unlocking uninhibited human voice and creative courage." },
+  { id: 18, name: "Steffen Stauber", tier: "Tier 1", stage: "Queued", role: "Systemic brand strategist", note: "Systemic thinking and authentic narrative." },
+  { id: 19, name: "Robert Ian Bonnick", tier: "Tier 1", stage: "Queued", role: "Australia-Indonesia corridor - Strategist & Author", note: "Cross-cultural connection and community ecosystems." },
+  { id: 20, name: "Pierre (Zest Ubud)", tier: "Tier 1", stage: "Queued", role: "Bali community anchor - Zest", note: "Building physical hubs where there are no strangers." },
+  { id: 21, name: "Karam", tier: "Tier 1", stage: "Queued", role: "Retreat facilitator - Pachamama (Costa Rica)", note: "Contemplative presence and intentional community life." },
+  { id: 22, name: "Leina", tier: "Tier 1", stage: "Queued", role: "Ocean retreat facilitator - Japan", note: "Non-verbal attunement and nature connection." },
+  { id: 23, name: "Mark Spall", tier: "Tier 1", stage: "Queued", role: "Personal coach & peer", note: "Candid conversation on personal evolution." },
+  { id: 24, name: "Gabriela Pados", tier: "Tier 1", stage: "Queued", role: "Reflective mentor", note: "Presence and human accompaniment." },
+  { id: 25, name: "Elise Midtun", tier: "Tier 1", stage: "Queued", role: "Close network connection", note: "Holistic family life and conscious living." },
+  { id: 26, name: "Jasmine Yao", tier: "Tier 1", stage: "Queued", role: "Creative community & family bridge", note: "Conscious community and family accompaniment." },
+  { id: 27, name: "Seth Tabatznik", tier: "Tier 2", stage: "Queued", role: "42 Acres - Musician & Philanthropist", note: "Regenerative land, music, and patronage; Mr. Fix Agency / PURE Project synergy." },
+  { id: 28, name: "Chip Conley", tier: "Tier 2", stage: "Queued", role: "Founder - Modern Elder Academy (MEA)", note: "Intergenerational wisdom, elderhood, and lifelong transitions." },
+  { id: 29, name: "Rob Holzer", tier: "Tier 2", stage: "Queued", role: "Matter Unlimited / Lineage Project", note: "Purpose-driven brand architecture and mindful youth programs." },
+  { id: 30, name: "Alnoor Ladha", tier: "Tier 2", stage: "Queued", role: "Transition Resource Circle - Author", note: "Unlearning, relationality, and post-capitalist philanthropy." },
+  { id: 31, name: "Michael Ventura", tier: "Tier 2", stage: "Queued", role: "Author - Applied Empathy / Sub Rosa", note: "Deep listening and applied empathy in leadership." },
+  { id: 32, name: "Jason Swamy", tier: "Tier 2", stage: "Queued", role: "Wonderfruit / Further Future", note: "How festivals and temporary cities catalyze lasting human connection." },
+  { id: 33, name: "Dakotah Apostolou", tier: "Tier 2", stage: "Queued", role: "Co-founder - Cohere Network", note: "Regenerative villages and shared living spaces." },
+  { id: 34, name: "Michael Franti & Spearhead", tier: "Tier 3", stage: "Queued", role: "Soulshine - Musician & Activist", note: "Share inaugural episodes first; music and conscious gathering." },
+  { id: 35, name: "Keanu Reeves", tier: "Tier 3", stage: "Queued", role: "Artist & Cultural Icon", note: "Share live series as credibility anchor; deep alignment with authentic humanity." },
+  { id: 36, name: "Tomas Bjorkman", tier: "Tier 3", stage: "Queued", role: "Ekskaret Foundation / IDGs", note: "Swedish philanthropist championing inner development." },
+  { id: 37, name: "Virgin Unite & The Elders", tier: "Tier 3", stage: "Queued", role: "Global Impact & Peacebuilding", note: "Catalytic global leadership and intergenerational presence." },
+  { id: 38, name: "Bayo Akomolafe", tier: "Tier 3", stage: "Queued", role: "The Emergence Network - Philosopher", note: "Slowing down and relational emergence." }
+];
